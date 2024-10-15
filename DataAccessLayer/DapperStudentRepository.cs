@@ -15,18 +15,18 @@ namespace DataAccessLayer
     /// Реализация IRepository для фреймворка Dapper
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class DapperRepository<T> : IRepository<T> where T : Student, IDomainObject, new()
+    public class DapperStudentRepository : IStudentRepository
     {
         private static string connectionString;
         private NpgsqlConnection db;
         /// <summary>
         /// Инициализирует новый экземпляр класса DapperRepository.
         /// </summary>
-        public DapperRepository()
+        public DapperStudentRepository(string _connectionString)
         {
-
+            connectionString = _connectionString;
         }
-        public void Create(T t)
+        public void Create(Student t)
         {
             using (var db = new NpgsqlConnection(GetConnectionString()))
             {
@@ -44,24 +44,24 @@ namespace DataAccessLayer
             }
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<Student> GetAll()
         {
             using (var db = new NpgsqlConnection(GetConnectionString()))
             {
-                return db.Query<T>("SELECT * FROM Students");
+                return db.Query<Student>("SELECT * FROM Students");
             }
         }
 
-        public T Get(int id)
+        public Student Get(int id)
         {
             using (var db = new NpgsqlConnection(GetConnectionString()))
             {
-                return db.QueryFirstOrDefault<T>("SELECT * FROM Students WHERE Id = @Id", new { Id = id });
+                return db.QueryFirstOrDefault<Student>("SELECT * FROM Students WHERE Id = @Id", new { Id = id });
             }
         }
 
 
-        public void Update(T entity)
+        public void Update(Student entity)
         {
             using (var db = new NpgsqlConnection(GetConnectionString()))
             {

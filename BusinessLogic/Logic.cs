@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 namespace BusinessLogic
 {
-    public class Logic
+    public class Logic : IStudentLogic
     {
         private readonly IRepository<Student> repository;
         public Logic(IRepository<Student> repository)
@@ -22,11 +22,7 @@ namespace BusinessLogic
             optionsBuilder.UseNpgsql(connectionString);
             return new AppDbContext(optionsBuilder.Options);
         }
-        /// <summary>
-        /// Метод получения студента по ID
-        /// </summary>
-        /// <param name="id">ID</param>
-        /// <returns>Студент</returns>
+        
         public List<string> GetStudent(int id)
         {
             var student = repository.Get(id);
@@ -42,15 +38,10 @@ namespace BusinessLogic
                 student.Group
             };
         }
-        /// <summary>
-        /// Добавление студента
-        /// </summary>
-        /// <param name="name">Имя</param>
-        /// <param name="speciality">Специальность</param>
-        /// <param name="group">Группа</param>
-        public void AddStudent(int id,string name, string speciality, string group)
+        
+        public void AddStudent(int id, string name, string speciality, string group)
         {
-            if (name == string.Empty|| speciality == string.Empty || group == string.Empty) { throw new ArgumentException("Одно из полей студента пустое!"); }
+            if (name == string.Empty || speciality == string.Empty || group == string.Empty) { throw new ArgumentException("Одно из полей студента пустое!"); }
             else
             {
                 Student student = new Student()
@@ -62,10 +53,7 @@ namespace BusinessLogic
                 repository.Create(student);
             }
         }
-        /// <summary>
-        /// Удаление студента
-        /// </summary>
-        /// <param name="name">Имя</param>
+        
         public void RemoveStudent(int id)
         {
             var student = repository.Get(id);
@@ -79,12 +67,7 @@ namespace BusinessLogic
                 ResetStudentIdSequence();
             }
         }
-        /// <summary>
-        /// Обновление параметров студента.
-        /// </summary>
-        /// <param name="name">Имя</param>
-        /// <param name="newSpeciality">Новая Специальность</param>
-        /// <param name="newGroup">Новая Группа</param>
+        
         public void UpdateStudent(int id, string newname, string newSpeciality, string newGroup)
         {
             var student = repository.Get(id);
@@ -108,10 +91,7 @@ namespace BusinessLogic
 
             repository.Update(student);
         }
-        /// <summary>
-        /// Метод возвращающий список всех студентов
-        /// </summary>
-        /// <returns>Список студентов</returns>
+        
         public List<List<string>> GetAllStudents()
         {
             var students = repository.GetAll();
@@ -123,10 +103,7 @@ namespace BusinessLogic
                 student.Group
             }).ToList();
         }
-        /// <summary>
-        /// Метод возвращающий словарь на основе специальностей
-        /// </summary>
-        /// <returns>Словарь string,int</returns>
+        
         public Dictionary<string, int> GetSpecialityDistribution()
         {
             var students = repository.GetAll();
@@ -143,13 +120,13 @@ namespace BusinessLogic
         /// </summary>
         public void ResetStudentIdSequence()
         {
-            if (repository is DapperRepository<Student> dapperRepository)
+            if (repository is DapperStudentRepository dapperRepository)
             {
                 dapperRepository.ExecuteSQL(@"
                 SELECT setval(pg_get_serial_sequence('students', 'id'), 
                 (SELECT COALESCE(MAX(id),0) FROM students), false);");
             }
-            else if (repository is EFRepository<Student>)
+            else if (repository is EFStudentRepository)
             {
                 var configuration = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())

@@ -11,6 +11,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 namespace BusinessLogic
 {
+    /// <summary>
+    /// Модуль конфигурации для Ninject, который управляет зависимостями в приложении.
+    /// </summary>
+    /// <remarks>
+    /// Этот класс загружает настройки из файла appsettings.json, 
+    /// настраивает контекст базы данных и связывает интерфейсы с их реализациями.
+    /// Поддерживает выбор между Dapper и Entity Framework для доступа к данным.
+    /// </remarks>
     public class SimpleConfigModule:NinjectModule
     {
         public override void Load()
@@ -30,14 +38,15 @@ namespace BusinessLogic
             Bind<DbContextOptions<AppDbContext>>().ToConstant(optionsBuilder.Options);
             Bind<AppDbContext>().ToSelf().InSingletonScope();
 
-            
+            Bind<IStudentLogic>().To<Logic>().InSingletonScope();
+
             switch (framework)
             {
                 case "Dapper":
-                    Bind<IRepository<Student>>().To<DapperRepository<Student>>().InSingletonScope();
+                    Bind<IRepository<Student>>().To<DapperStudentRepository>().InSingletonScope();
                     break;
                 case "EntityFramework":
-                    Bind<IRepository<Student>>().To<EFRepository<Student>>().InSingletonScope();
+                    Bind<IRepository<Student>>().To<EFStudentRepository>().InSingletonScope();
                     break;
                 default:
                     throw new ArgumentException("Неподдерживаемый фреймворк доступа к данным");

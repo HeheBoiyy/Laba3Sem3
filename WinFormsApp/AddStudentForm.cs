@@ -1,4 +1,5 @@
 ﻿using BusinessLogic;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,15 +15,15 @@ namespace WinFormsApp
 {
     public partial class AddStudentForm : Form
     {
-        private Logic logic;
+        private readonly IStudentLogic logic;
         /// <summary>
         /// Конструктор для инициализации объекта AddStudentForm
         /// </summary>
         /// <param name="logic">Бизнес логика</param>
-        public AddStudentForm(Logic logic)
+        public AddStudentForm(IStudentLogic logic)
         {
-            InitializeComponent();
             this.logic = logic;
+            InitializeComponent();
         }
         /// <summary>
         /// Добавляет студента при нажатии соответсвующей кнопки

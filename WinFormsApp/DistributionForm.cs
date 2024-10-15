@@ -1,4 +1,5 @@
 ﻿using BusinessLogic;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,16 +15,18 @@ namespace WinFormsApp
 {
     public partial class DistributionForm : Form
     {
-        private Logic logic;
+        private readonly IStudentLogic logic;
+        private IKernel ninjectkernel;
         /// <summary>
         /// Конструктор для инициализации объекта DistributionForm
         /// </summary>
         /// <param name="logic">Бизнес логика</param>
         /// <param name="specialityCounts">Словарь</param>
-        public DistributionForm(Logic logic, Dictionary<string, int> specialityCounts)
+        public DistributionForm(IStudentLogic logic, Dictionary<string, int> specialityCounts)
         {
+            IKernel ninjectKernel = new StandardKernel(new SimpleConfigModule());
+            logic = ninjectKernel.Get<Logic>();
             InitializeComponent();
-            this.logic = logic;
             LoadChart(specialityCounts);
         }
         /// <summary>

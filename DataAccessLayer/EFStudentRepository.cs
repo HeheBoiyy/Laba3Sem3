@@ -12,37 +12,37 @@ namespace DataAccessLayer
     /// Реализация репозитория с использованием Entity Framework Core.
     /// </summary>
     /// <typeparam name="T">Тип сущности, наследующийся от Student и реализующий IDomainObject.</typeparam>
-    public class EFRepository<T> : IRepository<T> where T : Student, IDomainObject, new()
+    public class EFStudentRepository : IStudentRepository
     {
         private readonly AppDbContext _context;
 
         
-        public EFRepository(DbContextOptions<AppDbContext> options)
+        public EFStudentRepository(DbContextOptions<AppDbContext> options)
         {
             _context = new AppDbContext(options);
         }
 
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<Student> GetAll()
         {
-            return _context.Set<T>().ToList();
+            return _context.Set<Student>().ToList();
         }
 
 
-        public T Get(int id)
+        public Student Get(int id)
         {
-            return _context.Set<T>().Find(id);
+            return _context.Set<Student>().Find(id);
         }
 
 
-        public void Create(T entity)
+        public void Create(Student entity)
         {
-            _context.Set<T>().Add(entity);
+            _context.Set<Student>().Add(entity);
             Save();
         }
 
 
-        public void Update(T entity)
+        public void Update(Student entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
             Save();
@@ -52,10 +52,10 @@ namespace DataAccessLayer
         public void Delete(int id)
         {
 
-            var entity = _context.Set<T>().Find(id);
+            var entity = _context.Set<Student>().Find(id);
             if (entity != null)
             {
-                _context.Set<T>().Remove(entity);
+                _context.Set<Student>().Remove(entity);
                 Save();
             }
         }

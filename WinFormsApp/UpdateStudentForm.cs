@@ -1,5 +1,6 @@
 ﻿using BusinessLogic;
 using Model;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,18 +16,18 @@ namespace WinFormsApp
 {
     public partial class UpdateStudentForm : Form
     {
-        private Logic logic;
+        private readonly IStudentLogic logic;
         private int id;
         /// <summary>
         /// Конструктор для инициализации UpdateStudentForm
         /// </summary>
         /// <param name="logic">Бизнес логика</param>
         /// <param name="name">Имя студента</param>
-        public UpdateStudentForm(Logic logic, int Id)
+        public UpdateStudentForm(IStudentLogic logic, int id)
         {
             InitializeComponent();
-            this.logic = logic;
-            this.id = Id;
+            this.logic = logic; // Инициализируем логику через интерфейс
+            this.id = id;
         }
         /// <summary>
         /// Метод для обновления данных о студенте

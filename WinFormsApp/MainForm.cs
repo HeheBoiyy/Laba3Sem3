@@ -1,19 +1,20 @@
 using BusinessLogic;
 using System.Diagnostics;
 using Ninject;
+using Microsoft.VisualBasic.Logging;
 namespace WinFormsApp
 {
     public partial class MainForm : Form
     {
-        private Logic logic;
         private IKernel ninjectKernel;
+        private readonly IStudentLogic logic;
         /// <summary>
         /// Инициализирует новый экземпляр формы MainForm.
         /// </summary>
         public MainForm()
         {
             IKernel ninjectKernel = new StandardKernel(new SimpleConfigModule());
-            logic = ninjectKernel.Get<Logic>();
+            logic = ninjectKernel.Get<IStudentLogic>(); // Получаем интерфейс
             InitializeComponent();
             InitializeListView();
             LoadStudents();
