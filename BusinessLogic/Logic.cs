@@ -139,7 +139,8 @@ namespace BusinessLogic
                 {
                     context.Database.ExecuteSqlRaw(@"
                     SELECT setval(pg_get_serial_sequence('students', 'id'), 
-                    (SELECT COALESCE(MAX(id),0) FROM students), false);");
+                    (SELECT COALESCE(MAX(id),0) FROM students), false);
+                    ");
                 }
             }
             else

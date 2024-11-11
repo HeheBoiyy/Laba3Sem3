@@ -43,7 +43,7 @@ namespace BusinessLogic
             switch (framework)
             {
                 case "Dapper":
-                    Bind<IRepository<Student>>().To<DapperStudentRepository>().InSingletonScope();
+                    Bind<IRepository<Student>>().To<DapperStudentRepository>().InSingletonScope().WithConstructorArgument("_connectionString",connectionString);
                     break;
                 case "EntityFramework":
                     Bind<IRepository<Student>>().To<EFStudentRepository>().InSingletonScope();
